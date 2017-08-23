@@ -1,5 +1,6 @@
 package com.github.zaza.allegro;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,8 @@ import javax.xml.rpc.ServiceException;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.google.common.collect.Iterables;
 
 public class AllegroClientTest {
 
@@ -50,6 +53,20 @@ public class AllegroClientTest {
 		
 		assertTrue(items.size() > 100);
 		assertTrue(items.stream().anyMatch(i -> !i.getLocation().isEmpty()));
+	}
+	
+	@Test
+	public void searchByUser() throws RemoteException, ServiceException {
+		Filter filterByString = new Filter();
+		filterByString.string = "mata judo";
+		List<Item> itemsByStrings = client().search(filterByString);
+		Item itemByString = Iterables.getLast(itemsByStrings);
+		
+		Filter filterByUser = new Filter();
+		filterByUser.userId = itemByString.getSellerInfo().getUserId();
+		List<Item> itemsByUser = client().search(filterByUser);
+		
+		assertThat(itemsByUser).contains(itemByString);
 	}
 
 	private void assertCategory(int id, String name) throws RemoteException, ServiceException {

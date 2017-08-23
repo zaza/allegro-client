@@ -7,6 +7,7 @@ import com.allegro.webapi.ArrayOfPriceinfotype;
 import com.allegro.webapi.ItemInfo;
 import com.allegro.webapi.ItemsListType;
 import com.allegro.webapi.UserInfoType;
+import com.google.common.base.Objects;
 
 public class Item {
 
@@ -53,5 +54,25 @@ public class Item {
 
 	public String getState() {
 		return State.valueOf(itemInfo.getItState()).name();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		Item other = (Item) obj;
+		return Objects.equal(this.itemsListType, other.itemsListType) && Objects.equal(this.itemInfo, other.itemInfo);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(itemsListType, itemInfo);
 	}
 }

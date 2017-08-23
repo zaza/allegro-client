@@ -101,6 +101,8 @@ public class AllegroClient {
 			builder.condition(true);
 		if (req.category != null)
 			builder.category(Integer.parseInt(req.category));
+		if (req.userId != null)
+			builder.userId(req.userId);
 		ArrayOfFilteroptionstype filter = builder.build();
 		List<Item> items = search(filter);
 		return new SearchResult(builder.getDescription(), items);

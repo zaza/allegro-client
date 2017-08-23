@@ -53,6 +53,10 @@ class TestableAllegroClient {
 		return delegate.search(filter);
 	}
 
+	List<Item> search(Filter filter) throws RemoteException {
+		return delegate.search(filter).getItems();
+	}
+
 	long getLatestVersionKey() throws RemoteException {
 		return delegate.getLatestVersionKey();
 	}

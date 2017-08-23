@@ -15,4 +15,6 @@ public class Filter {
 	public String buyNew;
 	
 	public String category;
+
+	public Integer userId;
 }
