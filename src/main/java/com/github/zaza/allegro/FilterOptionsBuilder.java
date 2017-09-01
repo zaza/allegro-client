@@ -9,7 +9,7 @@ import com.allegro.webapi.FilterOptionsType;
 import com.allegro.webapi.RangeValueType;
 import com.google.common.collect.Range;
 
-class FilterBuilder {
+class FilterOptionsBuilder {
 
 	private String query;
 	private Range<Integer> price;
@@ -17,20 +17,20 @@ class FilterBuilder {
 	private int category;
 	private int userId;
 
-	private FilterBuilder(String query) {
+	private FilterOptionsBuilder(String query) {
 		this.query = query;
 	}
 
-	static FilterBuilder search(String query) {
-		return new FilterBuilder(query);
+	static FilterOptionsBuilder search(String query) {
+		return new FilterOptionsBuilder(query);
 	}
 
-	FilterBuilder price(Range<Integer> price) {
+	FilterOptionsBuilder price(Range<Integer> price) {
 		this.price = price;
 		return this;
 	}
 
-	FilterBuilder condition(boolean buyNew) {
+	FilterOptionsBuilder condition(boolean buyNew) {
 		if (this.buyNew != null)
 			// when trying to set both buyNew and buyNew, unset the filter
 			this.buyNew = null;
@@ -38,12 +38,12 @@ class FilterBuilder {
 		return this;
 	}
 	
-	public FilterBuilder category(int category) {
+	public FilterOptionsBuilder category(int category) {
 		this.category = category;
 		return this;
 	}
 	
-	public FilterBuilder userId(int userId) {
+	public FilterOptionsBuilder userId(int userId) {
 		this.userId = userId;
 		return this;
 	}

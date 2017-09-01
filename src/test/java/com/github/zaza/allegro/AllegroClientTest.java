@@ -49,7 +49,7 @@ public class AllegroClientTest {
 	// see https://github.com/zaza/allegro-rss/issues/5
 	@Test(timeout = 20000)
 	public void searchWithLocationIsFastForLargeResultSets() throws Exception {
-		List<Item> items = client().search(FilterBuilder.search("cmax błotnik prawy przod").build());
+		List<Item> items = client().search(FilterOptionsBuilder.search("cmax błotnik prawy przod").build());
 		
 		assertTrue(items.size() > 100);
 		assertTrue(items.stream().anyMatch(i -> !i.getLocation().isEmpty()));

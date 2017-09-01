@@ -86,7 +86,7 @@ public class AllegroClient {
 	}
 
 	public SearchResult search(Filter req) throws RemoteException {
-		FilterBuilder builder = FilterBuilder.search(req.string);
+		FilterOptionsBuilder builder = FilterOptionsBuilder.search(req.string);
 		String priceFrom = req.price_from;
 		String priceTo = req.price_to;
 		if (priceFrom == null && priceTo != null)
