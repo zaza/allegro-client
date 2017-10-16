@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
-import com.allegro.webapi.ArrayOfFilteroptionstype;
 import com.allegro.webapi.CatInfoType;
 import com.allegro.webapi.CountryInfoType;
 import com.allegro.webapi.DoGetCatsDataRequest;
@@ -49,12 +48,16 @@ class TestableAllegroClient {
 				.findFirst().orElseThrow(IllegalArgumentException::new);
 	}
 	
-	List<Item> search(ArrayOfFilteroptionstype filter) throws RemoteException {
-		return delegate.search(filter);
+	public SearchBuilder searchByString(String string) throws RemoteException {
+		return delegate.searchByString(string);
 	}
 
-	List<Item> search(Filter filter) throws RemoteException {
-		return delegate.search(filter).getItems();
+	public SearchBuilder searchByCategory(int categoryId) throws RemoteException {
+		return delegate.searchByCategory(categoryId);
+	}
+
+	public SearchBuilder searchByUser(int userId) throws RemoteException {
+		return delegate.searchByUser(userId);
 	}
 
 	long getLatestVersionKey() throws RemoteException {

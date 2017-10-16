@@ -34,7 +34,7 @@ public class AllegroClientTest {
 	public void countryCodeCheck() throws Exception {
 		assertEquals(AllegroClient.POLAND, client().getCountryCode("Polska"));
 	}
-	
+
 	@Test
 	public void getCategoryIdForSportyWalki() throws Exception {
 		assertCategory(13522, "Sporty walki");
@@ -44,35 +44,32 @@ public class AllegroClientTest {
 	public void getCategoryIdForSportITurystyka() throws Exception {
 		assertCategory(3919, "Sport i Turystyka");
 	}
-	
-	// FIXME: temporarily increased timeout to 20sec, but it should take just few seconds to complete
+
+	// FIXME: temporarily increased timeout to 20sec, but it should take just
+	// few seconds to complete
 	// see https://github.com/zaza/allegro-rss/issues/5
 	@Test(timeout = 20000)
 	public void searchWithLocationIsFastForLargeResultSets() throws Exception {
-		List<Item> items = client().search(FilterOptionsBuilder.search("cmax błotnik prawy przod").build());
-		
+		List<Item> items = client().searchByString("cmax błotnik prawy przod").search();
+
 		assertTrue(items.size() > 100);
 		assertTrue(items.stream().anyMatch(i -> !i.getLocation().isEmpty()));
 	}
-	
+
 	@Test
 	public void searchByUser() throws RemoteException, ServiceException {
-		Filter filterByString = new Filter();
-		filterByString.string = "mata judo";
-		List<Item> itemsByStrings = client().search(filterByString);
+		List<Item> itemsByStrings = client().searchByString("mata judo").search();
 		Item itemByString = Iterables.getLast(itemsByStrings);
-		
-		Filter filterByUser = new Filter();
-		filterByUser.userId = itemByString.getSellerInfo().getUserId();
-		List<Item> itemsByUser = client().search(filterByUser);
-		
+
+		List<Item> itemsByUser = client().searchByUser(itemByString.getSellerInfo().getUserId()).search();
+
 		assertThat(itemsByUser).contains(itemByString);
 	}
 
 	private void assertCategory(int id, String name) throws RemoteException, ServiceException {
 		assertEquals(id, client().getCategoryId(name));
 	}
-	
+
 	private TestableAllegroClient client() throws ServiceException {
 		return TestableAllegroClient.get();
 	}

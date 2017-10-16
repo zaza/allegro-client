@@ -38,12 +38,12 @@ class FilterOptionsBuilder {
 		return this;
 	}
 	
-	public FilterOptionsBuilder category(int category) {
+	FilterOptionsBuilder category(int category) {
 		this.category = category;
 		return this;
 	}
 	
-	public FilterOptionsBuilder userId(int userId) {
+	FilterOptionsBuilder userId(int userId) {
 		this.userId = userId;
 		return this;
 	}
@@ -90,9 +90,4 @@ class FilterOptionsBuilder {
 		return buyNew ? Condition.NEW : Condition.USED;
 	}
 	
-	String getDescription() {
-		// TODO: include more parameters in the description e.g. price
-		// and keep in mind that 'query' can be null, e.g. when searching by category or user
-		return query;
-	}
 }

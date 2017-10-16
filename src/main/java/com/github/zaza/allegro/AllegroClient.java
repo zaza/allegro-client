@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,7 +31,6 @@ import com.allegro.webapi.ItemsListType;
 import com.allegro.webapi.ServicePort_PortType;
 import com.allegro.webapi.ServiceServiceLocator;
 import com.google.common.base.Charsets;
-import com.google.common.collect.Range;
 
 public class AllegroClient {
 
@@ -85,27 +85,16 @@ public class AllegroClient {
 				.getSessionHandlePart();
 	}
 
-	public SearchResult search(Filter req) throws RemoteException {
-		FilterOptionsBuilder builder = FilterOptionsBuilder.search(req.string);
-		String priceFrom = req.price_from;
-		String priceTo = req.price_to;
-		if (priceFrom == null && priceTo != null)
-			builder.price(Range.atMost(Integer.valueOf(priceTo)));
-		if (priceFrom != null && priceTo == null)
-			builder.price(Range.atLeast(Integer.valueOf(priceTo)));
-		if (priceFrom != null && priceTo != null)
-			builder.price(Range.closed(Integer.valueOf(priceFrom), Integer.valueOf(priceTo)));
-		if (req.buyUsed != null)
-			builder.condition(false);
-		if (req.buyNew != null)
-			builder.condition(true);
-		if (req.category != null)
-			builder.category(Integer.parseInt(req.category));
-		if (req.userId != null)
-			builder.userId(req.userId);
-		ArrayOfFilteroptionstype filter = builder.build();
-		List<Item> items = search(filter);
-		return new SearchResult(builder.getDescription(), items);
+	public SearchByStringBuilder searchByString(String string) {
+		return new SearchByStringBuilder(this, string);
+	}
+
+	public SearchByCategoryBuilder searchByCategory(int categoryId) {
+		return new SearchByCategoryBuilder(this, categoryId);
+	}
+
+	public SearchByUserBuilder searchByUser(int userId) {
+		return new SearchByUserBuilder(this, userId);
 	}
 
 	List<Item> search(ArrayOfFilteroptionstype filter) throws RemoteException {
@@ -143,32 +132,32 @@ public class AllegroClient {
 				// can fail with NPE
 				// https://travis-ci.org/zaza/allegro-rss/builds/259161485
 				// ignore the ItemsInfo ...
-		    	DoGetItemsInfoResponse itemsInfoResponse = allegro.doGetItemsInfo(r);
+				DoGetItemsInfoResponse itemsInfoResponse = allegro.doGetItemsInfo(r);
 				return Arrays.asList(itemsInfoResponse.getArrayItemListInfo().getItem());
 			};
 			tasks.add(task);
 		}
-		
+
 		List<ItemInfoStruct> itemInfos = new ArrayList<>();
 		try {
-			executorService.invokeAll(tasks).stream()
-				    .map(f -> {
-				        try {
-				            return f.get();
-				        }
-				        catch (Exception e) {
-				            throw new IllegalStateException(e);
-				        }
-				    })
-				    .forEach(items -> itemInfos.addAll(items));
+			executorService.invokeAll(tasks).stream().map(f -> {
+				try {
+					return f.get();
+				} catch (Exception e) {
+					throw new IllegalStateException(e);
+				}
+			}).forEach(items -> itemInfos.addAll(items));
 		} catch (InterruptedException e) {
 			throw new IllegalStateException("Collection item infos has been interrupted!", e);
 		}
-		
+
 		for (ItemsListType itemsListType : itemsList) {
 			// ... and skip it here
-			ItemInfoStruct itemInfo = itemInfos.stream().filter(info -> info.getItemInfo().getItId() == itemsListType.getItemId()).findFirst().get();
-			result.add(new Item(itemsListType, itemInfo.getItemInfo()));
+			Optional<ItemInfoStruct> found = itemInfos.stream()
+					.filter(info -> info.getItemInfo().getItId() == itemsListType.getItemId()).findFirst();
+			if (found.isPresent()) {
+				result.add(new Item(itemsListType, found.get().getItemInfo()));
+			}
 		}
 		executorService.shutdown();
 	}

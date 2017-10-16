@@ -48,6 +48,18 @@ public class Item {
 		return itemsListType.getPhotosInfo();
 	}
 
+	int getCategoryId() {
+		return itemsListType.getCategoryId();
+	}
+
+	public boolean isNew() {
+		return Condition.valueOf(itemsListType.getConditionInfo().toUpperCase()) == Condition.NEW;
+	}
+
+	public boolean isUsed() {
+		return !isNew();
+	}
+
 	public String getLocation() {
 		return itemInfo.getItLocation();
 	}
