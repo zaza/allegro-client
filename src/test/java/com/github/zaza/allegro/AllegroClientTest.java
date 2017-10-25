@@ -58,12 +58,25 @@ public class AllegroClientTest {
 
 	@Test
 	public void searchByUser() throws RemoteException, ServiceException {
-		List<Item> itemsByStrings = client().searchByString("mata judo").search();
-		Item itemByString = Iterables.getLast(itemsByStrings);
+		List<Item> itemsByString = client().searchByString("mata judo").search();
+		Item itemByString = Iterables.getLast(itemsByString);
 
 		List<Item> itemsByUser = client().searchByUser(itemByString.getSellerInfo().getUserId()).search();
 
 		assertThat(itemsByUser).contains(itemByString);
+	}
+
+	@Test
+	public void searchByExactPrice() throws RemoteException, ServiceException {
+		List<Item> itemsByString = client().searchByString(TestableAllegroClient.TEST_STRING).search();
+		Item itemWithIntegerPrice = itemsByString.stream()
+				.filter(i -> i.lowestPrice() == Double.valueOf(i.lowestPrice()).intValue()).findAny().get();
+		int price = Double.valueOf(itemWithIntegerPrice.lowestPrice()).intValue();
+
+		List<Item> itemsByExactPrice = client().searchByString(TestableAllegroClient.TEST_STRING).priceFrom(price)
+				.priceTo(price).search();
+
+		assertThat(itemsByExactPrice).allMatch(i -> i.lowestPrice() == price);
 	}
 
 	private void assertCategory(int id, String name) throws RemoteException, ServiceException {

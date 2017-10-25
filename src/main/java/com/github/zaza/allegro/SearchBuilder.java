@@ -9,24 +9,14 @@ public class SearchBuilder {
 
 	private AllegroClient client;
 	protected String string;
-	private int userId;
-	private int categoryId;
+	protected int userId;
+	protected int categoryId;
 	private Boolean buyNew;
 	private Integer priceFrom;
 	private Integer priceTo;
 
 	SearchBuilder(AllegroClient client) {
 		this.client = client;
-	}
-
-	public SearchBuilder userId(int userId) {
-		this.userId = userId;
-		return this;
-	}
-
-	public SearchBuilder categoryId(int categoryId) {
-		this.categoryId = categoryId;
-		return this;
 	}
 
 	public SearchBuilder usedOnly() {

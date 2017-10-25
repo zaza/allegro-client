@@ -1,5 +1,6 @@
 package com.github.zaza.allegro;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import com.allegro.webapi.ArrayOfPhotoinfotype;
@@ -66,6 +67,14 @@ public class Item {
 
 	public String getState() {
 		return State.valueOf(itemInfo.getItState()).name();
+	}
+
+	public double lowestPrice() {
+		return Arrays.asList(getPriceInfo().getItem()).stream().mapToDouble(p -> p.getPriceValue()).min().getAsDouble();
+	}
+
+	public double highestPrice() {
+		return Arrays.asList(getPriceInfo().getItem()).stream().mapToDouble(p -> p.getPriceValue()).max().getAsDouble();
 	}
 
 	@Override
