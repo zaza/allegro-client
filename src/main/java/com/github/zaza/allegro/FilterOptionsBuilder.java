@@ -31,9 +31,6 @@ class FilterOptionsBuilder {
 	}
 
 	FilterOptionsBuilder condition(boolean buyNew) {
-		if (this.buyNew != null)
-			// when trying to set both buyNew and buyNew, unset the filter
-			this.buyNew = null;
 		this.buyNew = buyNew;
 		return this;
 	}

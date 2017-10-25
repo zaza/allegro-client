@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.PrimitiveIterator.OfDouble;
 
 import javax.xml.rpc.ServiceException;
 
@@ -74,7 +75,56 @@ public class SearchBuilderTest {
 		assertFalse(items.isEmpty());
 		assertTrue(items.stream().allMatch(i -> i.isNew()));
 	}
+	
+	@Test
+	public void byStringAndBothConditions() throws Exception {
+		// the last criteria used overwrites those previously set 
+		List<Item> items = client().searchByString(TEST_STRING).newOnly().usedOnly().search();
 
+		assertTrue(items.stream().noneMatch(i -> i.isNew()));
+		assertTrue(items.stream().allMatch(i -> i.isUsed()));
+	}
+	
+	@Test
+	public void byStringAndPriceFrom() throws Exception {
+		OfDouble sortedPrices = allItems.stream().mapToDouble(i -> lowestPrice(i)).distinct().sorted().iterator();
+		sortedPrices.next();
+		int price = sortedPrices.next().intValue();
+		
+		List<Item> items = client().searchByString(TEST_STRING).priceFrom(price).search();
+		
+		assertTrue(items.size() < allItems.size());
+		assertTrue(items.stream().allMatch(i -> lowestPrice(i) >= price));
+	}
+
+	@Test
+	public void byStringAndPriceTo() throws Exception {
+		OfDouble sortedPrices = allItems.stream().mapToDouble(i -> highestPrice(i)).distinct().sorted().iterator();
+		sortedPrices.next();
+		int price = sortedPrices.next().intValue();
+		
+		List<Item> items = client().searchByString(TEST_STRING).priceTo(price).search();
+		
+		assertTrue(items.size() < allItems.size());
+		assertTrue(items.stream().allMatch(i -> highestPrice(i) <= price));
+	}
+	
+	@Test
+	public void byStringAndPriceRange() throws Exception {
+		OfDouble sortedPrices = allItems.stream().mapToDouble(i -> lowestPrice(i)).distinct().sorted().iterator();
+		sortedPrices.next();
+		int priceFrom = sortedPrices.next().intValue();
+		int priceTo = sortedPrices.next().intValue();
+		
+		List<Item> items = client().searchByString(TEST_STRING).priceFrom(priceFrom).priceTo(priceTo).search();
+		
+		assertTrue(items.size() < allItems.size());
+		assertTrue(items.stream().allMatch(i -> lowestPrice(i) >= priceFrom));
+		assertTrue(items.stream().allMatch(i -> lowestPrice(i) <= priceTo));
+	}
+	
+	// TODO: priceFrom == priceTo
+	
 	@Test
 	public void byUser() throws Exception {
 		int userId = allItems.iterator().next().getSellerInfo().getUserId();
@@ -149,6 +199,14 @@ public class SearchBuilderTest {
 
 	private static void assertAllTitlesContainWordsFromSearchString(List<Item> items) {
 		Arrays.asList(TEST_STRING.split(" ")).stream().forEach(word -> assertAllTitlesContain(items, word));
+	}
+	
+	private double lowestPrice(Item item) {
+		return Arrays.asList(item.getPriceInfo().getItem()).stream().mapToDouble(p -> p.getPriceValue()).min().getAsDouble();
+	} 
+	
+	private double highestPrice(Item item) {
+		return Arrays.asList(item.getPriceInfo().getItem()).stream().mapToDouble(p -> p.getPriceValue()).max().getAsDouble();
 	}
 
 	private static void assertAllTitlesContain(List<Item> items, String string) {
