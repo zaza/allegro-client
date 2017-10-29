@@ -3,6 +3,7 @@ package com.github.zaza.allegro;
 import java.util.Arrays;
 
 public enum State {
+	nieokreślone(0), //
 	dolnośląskie(1), //
 	kujawsko_pomorskie(2), //
 	lubelskie(3), //

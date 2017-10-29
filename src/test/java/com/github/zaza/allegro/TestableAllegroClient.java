@@ -53,7 +53,7 @@ class TestableAllegroClient {
 				.asList(allegro().doGetStatesInfo(new DoGetStatesInfoRequest(AllegroClient.POLAND, webApiKey()))
 						.getStatesInfoArray().getItem());
 		return states.stream().filter(s -> s.getStateId() == stateId).map(s -> s.getStateName()).findFirst()
-				.orElseThrow(IllegalArgumentException::new);
+				.orElse(State.nieokreślone.name());
 	}
 
 	List<Item> executeTestSearch() throws RemoteException {
