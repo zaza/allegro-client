@@ -79,6 +79,15 @@ public class AllegroClientTest {
 		assertThat(itemsByExactPrice).allMatch(i -> i.lowestPrice() == price);
 	}
 
+	@Test
+	@Ignore
+	// FIXME: user rating is always 0
+	// https://github.com/zaza/allegro-client/issues/1
+	public void anySellerHasPositiveRating() throws Exception {
+		assertTrue(client().executeTestSearch().stream()
+				.anyMatch(i -> i.getSellerInfo().getUserRating() > 0));
+	}
+
 	private void assertCategory(int id, String name) throws RemoteException, ServiceException {
 		assertEquals(id, client().getCategoryId(name));
 	}
