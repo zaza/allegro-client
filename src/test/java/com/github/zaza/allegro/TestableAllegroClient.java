@@ -39,7 +39,7 @@ class TestableAllegroClient {
 				.mapToInt(c -> c.getCountryId()).findFirst().getAsInt();
 	}
 
-	long getCategoryId(String categoryName) throws RemoteException, ServiceException {
+	int getCategoryId(String categoryName) throws RemoteException, ServiceException {
 		// TODO: move to AllegroClient, make API
 		List<CatInfoType> categories = Arrays
 				.asList(allegro().doGetCatsData(new DoGetCatsDataRequest(AllegroClient.POLAND, 0L, webApiKey(), false))

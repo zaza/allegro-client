@@ -1,5 +1,5 @@
 package com.github.zaza.allegro;
 
-enum Condition {
+public enum Condition {
 	NEW, USED, UNDEFINED 
 }

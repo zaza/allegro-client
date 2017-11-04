@@ -32,7 +32,7 @@ public class SearchByStringBuilderTest extends SearchBuilderTest {
 
 	@Test
 	public void byStringAndUsedOnly() throws Exception {
-		List<Item> items = client().searchByString(TEST_STRING).usedOnly().search();
+		List<Item> items = client().searchByString(TEST_STRING).condition(Condition.USED).search();
 
 		assertFalse(items.isEmpty());
 		assertAllTitlesContainWordsFromSearchString(items);
@@ -41,7 +41,7 @@ public class SearchByStringBuilderTest extends SearchBuilderTest {
 
 	@Test
 	public void byStringAndNewOnly() throws Exception {
-		List<Item> items = client().searchByString(TEST_STRING).newOnly().search();
+		List<Item> items = client().searchByString(TEST_STRING).condition(Condition.NEW).search();
 
 		assertFalse(items.isEmpty());
 		assertAllTitlesContainWordsFromSearchString(items);
@@ -51,7 +51,7 @@ public class SearchByStringBuilderTest extends SearchBuilderTest {
 	@Test
 	public void byStringAndBothConditions() throws Exception {
 		// the last criteria used overwrites those previously set
-		List<Item> items = client().searchByString(TEST_STRING).newOnly().usedOnly().search();
+		List<Item> items = client().searchByString(TEST_STRING).condition(Condition.NEW).condition(Condition.USED).search();
 
 		assertFalse(items.isEmpty());
 		assertAllTitlesContainWordsFromSearchString(items);
@@ -141,7 +141,7 @@ public class SearchByStringBuilderTest extends SearchBuilderTest {
 		List<Item> items = new ArrayList<>();
 		while  (items.isEmpty()) {
 			userId[0] = userIds.next();
-			items = client().searchByString(TEST_STRING).categoryId(categoryId).userId(userId[0]).newOnly()
+			items = client().searchByString(TEST_STRING).categoryId(categoryId).userId(userId[0]).condition(Condition.NEW)
 					.search();
 		}
 			

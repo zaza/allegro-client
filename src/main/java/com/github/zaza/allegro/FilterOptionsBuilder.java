@@ -13,7 +13,7 @@ class FilterOptionsBuilder {
 
 	private String query;
 	private Range<Integer> price;
-	private Boolean buyNew;
+	private Condition condition;
 	private int category;
 	private int userId;
 
@@ -30,8 +30,8 @@ class FilterOptionsBuilder {
 		return this;
 	}
 
-	FilterOptionsBuilder condition(boolean buyNew) {
-		this.buyNew = buyNew;
+	FilterOptionsBuilder condition(Condition condition) {
+		this.condition = condition;
 		return this;
 	}
 	
@@ -50,8 +50,8 @@ class FilterOptionsBuilder {
 		List<FilterOptionsType> subFilters = new ArrayList<>();
 		if (query != null && !query.isEmpty())
 			subFilters.add(newSubFilter(FilterId.Szukaj_w_tytule, query));
-		if (buyNew != null)
-			subFilters.add(newSubFilter(FilterId.Stan, getCondition().name().toLowerCase()));
+		if (condition != null)
+			subFilters.add(newSubFilter(FilterId.Stan, condition.name().toLowerCase()));
 		if (price != null)
 			subFilters.add(newSubFilter(FilterId.Cena, price));
 		if (category != 0)
@@ -83,8 +83,4 @@ class FilterOptionsBuilder {
 		return subFilter;
 	}
 
-	private Condition getCondition() {
-		return buyNew ? Condition.NEW : Condition.USED;
-	}
-	
 }

@@ -25,7 +25,7 @@ public class SearchByCategoryBuilderTest extends SearchBuilderTest {
 	
 	@Test
 	public void byCategoryAndUsedOnly() throws Exception {
-		List<Item> items = client().searchByCategory(getCategoryIdUnderTest()).usedOnly().search();
+		List<Item> items = client().searchByCategory(getCategoryIdUnderTest()).condition(Condition.USED).search();
 
 		assertFalse(items.isEmpty());
 		assertTrue(items.stream().allMatch(i -> i.isUsed()));

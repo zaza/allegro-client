@@ -53,12 +53,16 @@ public class Item {
 		return itemsListType.getCategoryId();
 	}
 
+	public boolean is(Condition condition) {
+		return Condition.valueOf(itemsListType.getConditionInfo().toUpperCase()) == condition;
+	}
+
 	public boolean isNew() {
-		return Condition.valueOf(itemsListType.getConditionInfo().toUpperCase()) == Condition.NEW;
+		return is(Condition.NEW);
 	}
 
 	public boolean isUsed() {
-		return !isNew();
+		return is(Condition.USED);
 	}
 
 	public String getLocation() {

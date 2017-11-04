@@ -10,7 +10,7 @@ A Java client for Allegro.
 <dependency>
     <groupId>com.github.zaza</groupId>
     <artifactId>allegro-client</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 

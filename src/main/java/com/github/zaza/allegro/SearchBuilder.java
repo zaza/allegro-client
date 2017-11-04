@@ -11,7 +11,7 @@ public class SearchBuilder {
 	protected String string;
 	protected int userId;
 	protected int categoryId;
-	private Boolean buyNew;
+	private Condition condition;
 	private Integer priceFrom;
 	private Integer priceTo;
 
@@ -19,13 +19,8 @@ public class SearchBuilder {
 		this.client = client;
 	}
 
-	public SearchBuilder usedOnly() {
-		this.buyNew = false;
-		return this;
-	}
-
-	public SearchBuilder newOnly() {
-		this.buyNew = true;
+	public SearchBuilder condition(Condition condition) {
+		this.condition = condition;
 		return this;
 	}
 
@@ -50,11 +45,8 @@ public class SearchBuilder {
 	}
 
 	public List<Item> search() throws RemoteException {
-		FilterOptionsBuilder optionsBuilder = FilterOptionsBuilder.search(string).userId(userId).category(categoryId);
-		if (buyNew != null)
-			optionsBuilder.condition(buyNew);
-		optionsBuilder.price(getPriceRange());
-		return client.search(optionsBuilder.build());
+		return client.search(FilterOptionsBuilder.search(string).userId(userId).category(categoryId)
+				.condition(condition).price(getPriceRange()).build());
 	}
 
 }
