@@ -62,7 +62,7 @@ public class Item {
 	}
 
 	public boolean isUsed() {
-		return is(Condition.USED);
+		return !isNew();
 	}
 
 	public String getLocation() {
