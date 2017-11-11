@@ -53,8 +53,12 @@ public class AllegroClient {
 	private String sessionHandle;
 
 	public AllegroClient(String webApiKey) throws ServiceException, RemoteException {
-		this.login = System.getenv().get(Env.ALLEGRO_LOGIN);
-		this.password = System.getenv().get(Env.ALLEGRO_PASSWORD);
+		this(System.getenv().get(Env.ALLEGRO_LOGIN), System.getenv().get(Env.ALLEGRO_PASSWORD), webApiKey);
+	}
+
+	public AllegroClient(String login, String password, String webApiKey) throws ServiceException, RemoteException {
+		this.login = login;
+		this.password = password;
 		this.webApiKey = webApiKey;
 
 		ServiceServiceLocator service = new ServiceServiceLocator();

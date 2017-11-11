@@ -14,4 +14,12 @@ A Java client for Allegro.
 </dependency>
 ```
 
+Sample usage:
+
+```
+new AllegroClient(<login>, <password>, <webapikey>)
+	.searchByString("xbox one").priceTo(500).condition(Condition.USED).search()
+	.stream().forEach(i -> System.out.println(i.getItemTitle());
+```
+
 Go [here](https://github.com/zaza/allegro-client/issues) for open issues and upcoming features.
