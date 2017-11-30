@@ -1,5 +1,7 @@
 package com.github.zaza.allegro;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -99,5 +101,10 @@ public class Item {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(itemsListType, itemInfo);
+	}
+
+	@Override
+	public String toString() {
+		return format("'%s' (%s)", getItemTitle(), getItemId());
 	}
 }

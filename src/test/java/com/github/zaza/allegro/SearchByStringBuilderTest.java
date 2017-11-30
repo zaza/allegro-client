@@ -2,6 +2,7 @@ package com.github.zaza.allegro;
 
 import static com.github.zaza.allegro.TestableAllegroClient.TEST_STRING;
 import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -63,26 +64,26 @@ public class SearchByStringBuilderTest extends SearchBuilderTest {
 	public void byStringAndPriceFrom() throws Exception {
 		OfDouble sortedPrices = allItems.stream().mapToDouble(i -> i.lowestPrice()).distinct().sorted().iterator();
 		sortedPrices.next();
-		int price = sortedPrices.next().intValue();
+		int price = new Double(Math.floor(sortedPrices.next())).intValue();
 
 		List<Item> items = client().searchByString(TEST_STRING).priceFrom(price).search();
 
 		assertTrue(items.size() < allItems.size());
 		assertAllTitlesContainWordsFromSearchString(items);
-		assertTrue(items.stream().allMatch(i -> i.lowestPrice() >= price));
+		items.stream().forEach(i -> assertThat(i.lowestPrice()).as("checking item %s", i).isGreaterThanOrEqualTo(price));
 	}
 
 	@Test
 	public void byStringAndPriceTo() throws Exception {
 		OfDouble sortedPrices = allItems.stream().mapToDouble(i -> i.highestPrice()).distinct().sorted().iterator();
 		sortedPrices.next();
-		int price = sortedPrices.next().intValue();
+		int price = new Double(Math.ceil(sortedPrices.next())).intValue();
 
 		List<Item> items = client().searchByString(TEST_STRING).priceTo(price).search();
 
 		assertTrue(items.size() < allItems.size());
 		assertAllTitlesContainWordsFromSearchString(items);
-		assertTrue(items.stream().allMatch(i -> i.highestPrice() <= price));
+		items.stream().forEach(i -> assertThat(i.highestPrice()).as("checking item %s", i).isLessThanOrEqualTo(price));
 	}
 
 	@Test
