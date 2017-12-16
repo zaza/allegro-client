@@ -4,11 +4,13 @@ import static java.lang.String.format;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
-import com.allegro.webapi.ArrayOfPhotoinfotype;
 import com.allegro.webapi.ArrayOfPriceinfotype;
 import com.allegro.webapi.ItemInfo;
 import com.allegro.webapi.ItemsListType;
+import com.allegro.webapi.PhotoInfoType;
 import com.allegro.webapi.UserInfoType;
 import com.google.common.base.Objects;
 
@@ -47,8 +49,10 @@ public class Item {
 		return itemsListType.getEndingTime();
 	}
 
-	public ArrayOfPhotoinfotype getPhotosInfo() {
-		return itemsListType.getPhotosInfo();
+	public List<PhotoInfoType> getPhotos() {
+		if (itemsListType.getPhotosInfo() == null || itemsListType.getPhotosInfo().getItem() == null)
+			return Collections.emptyList();
+		return Arrays.asList(itemsListType.getPhotosInfo().getItem());
 	}
 
 	int getCategoryId() {
